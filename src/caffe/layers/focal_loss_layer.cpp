@@ -171,7 +171,7 @@ void FocalLossLayer<Ftype, Btype>::Backward_cpu(const vector<Blob*>& top,
 		float fp16_global_grad_scale = this->parent_net()->global_grad_scale();
 		loss_weight *= fp16_global_grad_scale;
 	}
-    caffe_scal(prob_.count(), loss_weight, bottom_diff);
+    caffe_scal(prob_->count(), loss_weight, bottom_diff);
   }
 }
 
