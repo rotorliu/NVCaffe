@@ -682,18 +682,22 @@ message LayerParameter {
   optional MultiBoxLossParameter multibox_loss_param = 201;
   optional MVNParameter mvn_param = 120;
   optional NormalizeParameter norm_param = 206;
+  optional ParameterParameter parameter_param = 145;
   optional PermuteParameter permute_param = 202;
   optional PoolingParameter pooling_param = 121;
   optional PowerParameter power_param = 122;
   optional PReLUParameter prelu_param = 131;
   optional PriorBoxParameter prior_box_param = 203;
   optional PythonParameter python_param = 130;
+  optional RecurrentParameter recurrent_param = 146;
   optional ReductionParameter reduction_param = 136;
   optional ReLUParameter relu_param = 123;
+  optional ReLU6Parameter relu6_param = 208;
   optional ReshapeParameter reshape_param = 133;
   optional ScaleParameter scale_param = 142;
   optional SigmoidParameter sigmoid_param = 124;
   optional SoftmaxParameter softmax_param = 125;
+  optional FocalLossParameter focal_loss_param = 147;
   optional SPPParameter spp_param = 132;
   optional SliceParameter slice_param = 126;
   optional TanHParameter tanh_param = 127;
@@ -1242,6 +1246,7 @@ message ConvolutionParameter {
   // CUDNN_CONVOLUTION_BWD_DATA_ALGO_WINOGRAD_NONFUSED and CUDNN_CONVOLUTION_BWD_FILTER_ALGO_WINOGRAD_NONFUSED
   // correspondingly.
   optional string conv_algos_override = 20 [default = "-1,-1,-1"];
+  optional bool half_pad = 21 [default = false];
 }
 
 message CropParameter {
@@ -1711,6 +1716,10 @@ message NormalizeParameter {
   optional float eps = 4 [default = 1e-10];
 }
 
+message ParameterParameter {
+  optional BlobShape shape = 1;
+}
+
 message PermuteParameter {
   // The new orders of the axes of data. Notice it should be with
   // in the same range as the input data, and it starts from 0.
@@ -1799,6 +1808,8 @@ message PriorBoxParameter {
 
   // Offset to the top left corner of each cell.
   optional float offset = 13 [default = 0.5];
+
+  optional bool reduce_boxes = 14 [default = false];
 }
 
 message PythonParameter {
@@ -1871,6 +1882,16 @@ message ReLUParameter {
   // improve neural network acoustic models. In ICML Workshop on Deep Learning
   // for Audio, Speech, and Language Processing.
   optional float negative_slope = 1 [default = 0];
+  enum Engine {
+    DEFAULT = 0;
+    CAFFE = 1;
+    CUDNN = 2;
+  }
+  optional Engine engine = 2 [default = DEFAULT];
+}
+
+// Message that stores parameters used by ReLU6Layer
+message ReLU6Parameter {
   enum Engine {
     DEFAULT = 0;
     CAFFE = 1;
@@ -2013,6 +2034,22 @@ message SoftmaxParameter {
   // from the end (e.g., -1 for the last axis).
   // Any other axes will be evaluated as independent softmaxes.
   optional int32 axis = 2 [default = 1];
+}
+
+message FocalLossParameter {
+  enum Engine {
+    DEFAULT = 0;
+    CAFFE = 1;
+    CUDNN = 2;
+  }
+  optional Engine engine = 1 [default = DEFAULT];
+
+  // The axis along which to perform the softmax -- may be negative to index
+  // from the end (e.g., -1 for the last axis).
+  // Any other axes will be evaluated as independent softmaxes.
+  optional int32 axis = 2 [default = 1];
+  optional float alpha = 3 [default = 0.25];
+  optional float gamma = 4 [default = 2.0];
 }
 
 message TanHParameter {
