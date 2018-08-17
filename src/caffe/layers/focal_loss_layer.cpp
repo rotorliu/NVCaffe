@@ -58,7 +58,7 @@ void FocalLossLayer<Ftype, Btype>::Reshape(
 }
 
 template <typename Ftype, typename Btype>
-float SoftmaxWithLossLayer<Ftype, Btype>::get_normalizer(
+float FocalLossLayer<Ftype, Btype>::get_normalizer(
 	LossParameter_NormalizationMode normalization_mode, int valid_count) {
 	float normalizer = 1.F;
 	switch (normalization_mode) {
