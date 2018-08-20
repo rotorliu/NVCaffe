@@ -263,7 +263,7 @@ void Solver::Step(int iters) {
 
     // Just started or restored?
     const bool first_loop = iter_ == 0 || iterations_last_ < 0;
-    if (iter_ == 0) {
+    if (iter_ == 0 && param_.test_initialization()) {
       LOG_IF(INFO, Caffe::root_solver()) << mgpu_str << "Initial Test started...";
       iteration_timer_->Start();
       scores = TestAll(1, use_multi_gpu_testing);
