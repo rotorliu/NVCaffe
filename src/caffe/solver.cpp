@@ -263,14 +263,16 @@ void Solver::Step(int iters) {
 
     // Just started or restored?
     const bool first_loop = iter_ == 0 || iterations_last_ < 0;
-    if (iter_ == 0 && param_.test_initialization()) {
-      LOG_IF(INFO, Caffe::root_solver()) << mgpu_str << "Initial Test started...";
-      iteration_timer_->Start();
-      scores = TestAll(1, use_multi_gpu_testing);
-      callback_soft_barrier();
-      float lapse = iteration_timer_->Seconds();
-      LOG_IF(INFO, Caffe::root_solver()) << mgpu_str << "Initial Test completed in "
-                                                     << lapse << "s";
+    if (iter_ == 0) {
+		if (param_.test_initialization()) {
+			LOG_IF(INFO, Caffe::root_solver()) << mgpu_str << "Initial Test started...";
+			iteration_timer_->Start();
+			scores = TestAll(1, use_multi_gpu_testing);
+			callback_soft_barrier();
+			float lapse = iteration_timer_->Seconds();
+			LOG_IF(INFO, Caffe::root_solver()) << mgpu_str << "Initial Test completed in "
+				<< lapse << "s";
+		}
     } else if (test_and_snapshot || (param_.test_interval()
         && iter_ % param_.test_interval() == 0
         && iterations_last_ >= 0)) {
